@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskly | Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(139,0,0,0.28), transparent 30%),
+        radial-gradient(circle at top right, rgba(255,255,255,0.05), transparent 18%),
+        linear-gradient(135deg, #140000, #050505 60%, #000000);
+      color: #ffffff;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .layout {
+      min-height: 100vh;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .top-nav-inner {
+      max-width: 1350px;
+      margin: 0 auto;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #8b0000, #3b0000);
+      box-shadow: 0 10px 24px rgba(139,0,0,0.28);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 26px;
+      letter-spacing: 0.3px;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: rgba(139,0,0,0.4);
+      border-color: rgba(239,68,68,0.35);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn.logout {
+      background: #8b0000;
+      border-color: transparent;
+    }
+
+    .nav-btn.logout:hover {
+      background: #a30000;
+    }
+
+    .page-shell {
+      max-width: 1350px;
+      margin: 0 auto;
+      padding: 34px 22px 42px;
+    }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      padding: 34px;
+      margin-bottom: 24px;
+      background:
+        linear-gradient(135deg, rgba(139,0,0,0.30), rgba(255,255,255,0.04)),
+        rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.22);
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(255,255,255,0.08), transparent 18%),
+        radial-gradient(circle at 15% 80%, rgba(139,0,0,0.22), transparent 22%);
+      pointer-events: none;
+    }
+
+    .hero-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy h2 {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.05;
+    }
+
+    .hero-copy h2 span {
+      color: #ef4444;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: #e5e7eb;
+      line-height: 1.8;
+      max-width: 720px;
+      font-size: 16px;
+    }
+
+    .hero-mini-card {
+      border-radius: 22px;
+      padding: 22px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-mini-card .mini-label {
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .hero-mini-card .mini-value {
+      font-size: 42px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .hero-mini-card .mini-text {
+      color: #cbd5e1;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+      transition: 0.25s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(239,68,68,0.35);
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stat-top i {
+      font-size: 18px;
+      color: #f87171;
+      background: rgba(139,0,0,0.18);
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+    }
+
+    .stat-card .label {
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .stat-card .value {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 22px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 26px;
+      padding: 26px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 28px;
+    }
+
+    .panel-intro {
+      color: #cbd5e1;
+      margin: -2px 0 18px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.95);
+      color: #111827;
+      font-size: 14px;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.15);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: none;
+      background: #8b0000;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-top: 8px;
+      transition: 0.25s ease;
+    }
+
+    .btn:hover {
+      background: #a30000;
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: #2f3a4d;
+    }
+
+    .btn.secondary:hover {
+      background: #3b495f;
+    }
+
+    .stage-box,
+    .activity-card,
+    .client-activity,
+    .stage-submission {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .stage-box {
+      margin-bottom: 12px;
+    }
+
+    .meta {
+      color: #cbd5e1;
+      font-size: 13px;
+      margin-top: 7px;
+      line-height: 1.6;
+    }
+
+    .student-badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.08);
+      color: #f8fafc;
+    }
+
+    .activity-list,
+    .client-list {
+      max-height: 75vh;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .activity-list::-webkit-scrollbar,
+    .client-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .activity-list::-webkit-scrollbar-thumb,
+    .client-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+    }
+
+    .activity-card {
+      margin-bottom: 14px;
+      transition: 0.25s ease;
+    }
+
+    .activity-card:hover {
+      border-color: rgba(239,68,68,0.30);
+      transform: translateY(-2px);
+    }
+
+    .activity-card h3 {
+      margin: 0 0 8px;
+      font-size: 21px;
+    }
+
+    .activity-card p {
+      margin: 0 0 8px;
+      color: #e5e7eb;
+      line-height: 1.7;
+    }
+
+    .empty {
+      color: #cbd5e1;
+      padding: 14px 0;
+    }
+
+    .client-accordion {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: 0.2s ease;
+    }
+
+    .client-accordion:hover {
+      border-color: rgba(239,68,68,0.28);
+    }
+
+    .client-accordion-header {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: white;
+      text-align: left;
+      padding: 18px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: 0.25s ease;
+    }
+
+    .client-accordion-header:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .client-name {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .client-summary-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .client-progress-mini {
+      width: 160px;
+    }
+
+    .client-progress-mini-bar {
+      width: 100%;
+      height: 11px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .client-progress-mini-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .client-progress-mini-fill.not-started {
+      background: linear-gradient(90deg, #7f1d1d, #ef4444);
+    }
+
+    .client-progress-mini-fill.in-progress {
+      background: linear-gradient(90deg, #f59e0b, #fde047);
+    }
+
+    .client-progress-mini-fill.completed {
+      background: linear-gradient(90deg, #16a34a, #86efac);
+    }
+
+    .client-percent {
+      font-size: 18px;
+      font-weight: 800;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .client-percent.not-started {
+      color: #fca5a5;
+    }
+
+    .client-percent.in-progress {
+      color: #fde68a;
+    }
+
+    .client-percent.completed {
+      color: #86efac;
+    }
+
+    .client-arrow {
+      font-size: 20px;
+      color: #fca5a5;
+      transition: transform 0.3s ease;
+    }
+
+    .client-accordion.open .client-arrow {
+      transform: rotate(180deg);
+    }
+
+    .client-accordion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+      border-top: 1px solid rgba(255,255,255,0);
+    }
+
+    .client-accordion.open .client-accordion-content {
+      grid-template-rows: 1fr;
+      border-top-color: rgba(255,255,255,0.08);
+    }
+
+    .client-accordion-inner {
+      overflow: hidden;
+    }
+
+    .client-accordion-body {
+      padding: 0 20px 20px;
+    }
+
+    .client-activity {
+      margin-top: 14px;
+    }
+
+    .client-activity h4 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .progress-wrap {
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      color: #e5e7eb;
+      margin-bottom: 7px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.10);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7f1d1d, #dc2626);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .stage-submission {
+      margin-top: 10px;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .section-title-row p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 1120px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .two-col,
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .top-nav-inner,
+      .page-shell {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .client-accordion-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .client-summary-right {
+        width: 100%;
+        min-width: 0;
+        justify-content: flex-start;
+      }
+
+      .hero-copy h2 {
+        font-size: 32px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header class="top-nav">
+      <div class="top-nav-inner">
+        <div class="brand">
+          <div class="brand-badge">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div>
+            <h1>Taskly</h1>
+            <p>Admin dashboard and activity management</p>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <button type="button" class="nav-btn active" onclick="scrollToTopPage()">Manage Activities</button>
+          <button type="button" class="nav-btn" onclick="scrollToSection('monitorSection')">Student Progress</button>
+          <button type="button" class="nav-btn" onclick="window.location.href='dashboard.html'">View Student Dashboard</button>
+          <button type="button" class="nav-btn logout" onclick="goHome()">Back to Home</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero-panel">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h2>WELCOME BACK, <span id="adminName"></span></h2>
+            <p>
+              Create structured activities, assign deadlines, and monitor student's progress in one place.
+              Student Accounts and Progress now shows both the full name and student number of each students.
+            </p>
+          </div>
+
+          <div class="hero-mini-card">
+            <div class="mini-label">Dashboard Access</div>
+            <div class="mini-value">Admin</div>
+            <div class="mini-text">
+              Use this panel to publish activities with multiple tasks and review overall student completion and submissions.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Total Students</div>
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="value" id="totalClients">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Total Activities</div>
+            <i class="fa-solid fa-clipboard-list"></i>
+          </div>
+          <div class="value" id="totalActivities">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Total Submissions</div>
+            <i class="fa-solid fa-file-arrow-up"></i>
+          </div>
+          <div class="value" id="totalSubmissions">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Completion Rate</div>
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div class="value" id="overallCompletion">0%</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <section class="panel">
+          <h2>Create Activity</h2>
+          <div class="panel-intro">
+            Publish a new activity, add a deadline, then generate tasks with instructions for users to complete.
+          </div>
+
+          <div class="field">
+            <label for="activityTitle">Activity Title</label>
+            <input id="activityTitle" type="text" placeholder="Enter activity title" />
+          </div>
+
+          <div class="field">
+            <label for="activityDescription">Activity Description</label>
+            <textarea id="activityDescription" placeholder="Enter activity description"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="activityDeadline">Activity Deadline</label>
+            <input id="activityDeadline" type="date" />
+          </div>
+
+          <div class="field">
+            <label for="stageCount">Number of Tasks</label>
+            <input id="stageCount" type="number" min="1" max="20" value="1" />
+          </div>
+
+          <button class="btn secondary" type="button" onclick="generateStages()">Generate Tasks</button>
+
+          <div id="stagesContainer" style="margin-top:16px;"></div>
+
+          <button class="btn" type="button" onclick="saveActivity()">Publish Activity</button>
+        </section>
+
+        <section class="panel">
+          <h2>Published Activities</h2>
+          <div class="panel-intro">
+            Review all posted activities here.  
+          </div>
+          <div id="activityList" class="activity-list"></div>
+        </section>
+      </div>
+
+      <section class="panel" id="monitorSection">
+        <div class="section-title-row">
+          <div>
+            <h2 style="margin:0 0 6px;">Student Accounts and Progress</h2>
+            <p>Filter users and inspect their activity progress, task submissions, and completion percentages.</p>
+          </div>
+        </div>
+
+        <div class="field" style="max-width: 420px;">
+          <label for="clientFilter">Filter Student</label>
+          <select id="clientFilter" onchange="renderClientProgress()">
+            <option value="all">All Students</option>
+          </select>
+        </div>
+
+        <div id="clientProgressList" class="client-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+        const USERS_KEY = 'local_auth_users';
+    const ACTIVITIES_KEY = 'site_activities';
+    const SUBMISSIONS_KEY = 'client_stage_submissions';
+
+    document.getElementById('adminName').textContent = 'Admin';
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    }
+
+    function getActivities() {
+      return JSON.parse(localStorage.getItem(ACTIVITIES_KEY) || '[]');
+    }
+
+    function saveActivities(data) {
+      localStorage.setItem(ACTIVITIES_KEY, JSON.stringify(data));
+    }
+
+    function getSubmissions() {
+      return JSON.parse(localStorage.getItem(SUBMISSIONS_KEY) || '{}');
+    }
+
+    function getFullName(client) {
+      return [client.firstName, client.middleName, client.lastName].filter(Boolean).join(' ');
+    }
+
+    function getClientUsers() {
+      const users = getUsers()
+        .filter(user => user.username && user.username.toLowerCase() !== 'admin')
+        .map(user => ({
+          username: user.username,
+          studentNumber: user.studentNumber || user.username,
+          firstName: user.firstName || '',
+          middleName: user.middleName || '',
+          lastName: user.lastName || '',
+          email: user.email || ''
+        }));
+
+      const submissions = getSubmissions();
+      const existingUsernames = users.map(user => user.username);
+
+      Object.keys(submissions).forEach(key => {
+        const username = key.split('__')[0];
+        if (username && username.toLowerCase() !== 'admin' && !existingUsernames.includes(username)) {
+          users.push({
+            username,
+            studentNumber: username,
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            email: ''
+          });
+        }
+      });
+
+      return users;
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function scrollToTopPage() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function generateStages() {
+      const count = parseInt(document.getElementById('stageCount').value, 10) || 1;
+      const container = document.getElementById('stagesContainer');
+      container.innerHTML = '';
+
+      for (let i = 1; i <= count; i++) {
+        const box = document.createElement('div');
+        box.className = 'stage-box';
+        box.innerHTML = `
+          <div class="field">
+            <label>Task ${i} Title</label>
+            <input type="text" class="stage-title" placeholder="Enter stage ${i} title" />
+          </div>
+          <div class="field">
+            <label>Task ${i} Instruction</label>
+            <textarea class="stage-instruction" placeholder="Enter instruction for stage ${i}"></textarea>
+          </div>
+        `;
+        container.appendChild(box);
+      }
+    }
+
+    function saveActivity() {
+      const title = document.getElementById('activityTitle').value.trim();
+      const description = document.getElementById('activityDescription').value.trim();
+      const deadline = document.getElementById('activityDeadline').value;
+      const stageTitles = document.querySelectorAll('.stage-title');
+      const stageInstructions = document.querySelectorAll('.stage-instruction');
+
+      if (!title || !description || !deadline) {
+        alert('Please complete the activity title, description, and deadline.');
+        return;
+      }
+
+      const stages = [];
+      for (let i = 0; i < stageTitles.length; i++) {
+        const stageTitle = stageTitles[i].value.trim();
+        const instruction = stageInstructions[i].value.trim();
+
+        if (!stageTitle || !instruction) {
+          alert(`Please complete all fields for Stage ${i + 1}.`);
+          return;
+        }
+
+        stages.push({
+          id: 'stage_' + (i + 1),
+          title: stageTitle,
+          instruction: instruction
+        });
+      }
+
+      const activities = getActivities();
+      activities.push({
+        id: 'act_' + Date.now(),
+        title,
+        description,
+        deadline,
+        createdAt: new Date().toLocaleString(),
+        stages
+      });
+
+      saveActivities(activities);
+
+      document.getElementById('activityTitle').value = '';
+      document.getElementById('activityDescription').value = '';
+      document.getElementById('activityDeadline').value = '';
+      document.getElementById('stageCount').value = 5;
+      document.getElementById('stagesContainer').innerHTML = '';
+
+      refreshAdminView();
+      alert('Activity published successfully.');
+    }
+
+    function deleteActivity(id) {
+      const updated = getActivities().filter(activity => activity.id !== id);
+      saveActivities(updated);
+      refreshAdminView();
+    }
+
+    function renderActivities() {
+      const list = document.getElementById('activityList');
+      const activities = getActivities();
+
+      if (!activities.length) {
+        list.innerHTML = '<div class="activity-card">No activities yet.</div>';
+        return;
+      }
+
+      list.innerHTML = activities.map(activity => `
+        <div class="activity-card">
+          <h3>${activity.title}</h3>
+          <p>${activity.description}</p>
+          <div class="meta">Stages: ${activity.stages.length}</div>
+          <div class="meta">Deadline: ${activity.deadline}</div>
+          <div class="meta">Created: ${activity.createdAt}</div>
+          <button class="btn secondary" onclick="deleteActivity('${activity.id}')">Delete</button>
+        </div>
+      `).join('');
+    }
+
+    function populateClientFilter() {
+      const select = document.getElementById('clientFilter');
+      const clients = getClientUsers();
+      const currentValue = select.value || 'all';
+
+      select.innerHTML =
+        '<option value="all">All Clients</option>' +
+        clients.map(client => {
+          const fullName = getFullName(client);
+          const displayText = fullName
+            ? `${fullName} (${client.studentNumber})`
+            : client.studentNumber;
+
+          return `<option value="${client.username}">${displayText}</option>`;
+        }).join('');
+
+      const values = ['all', ...clients.map(c => c.username)];
+      select.value = values.includes(currentValue) ? currentValue : 'all';
+    }
+
+    function renderDashboardStats() {
+      const clients = getClientUsers();
+      const activities = getActivities();
+      const submissions = getSubmissions();
+
+      let totalCompletedStages = 0;
+      let totalPossibleStages = 0;
+      let totalSubmissionEntries = 0;
+
+      clients.forEach(client => {
+        activities.forEach(activity => {
+          const key = client.username + '__' + activity.id;
+          const clientActivitySubmissions = submissions[key] || {};
+          const completedCount = activity.stages.filter(
+            stage => clientActivitySubmissions[stage.id]?.completed || clientActivitySubmissions[stage.id]
+          ).length;
+
+          totalSubmissionEntries += completedCount;
+          totalCompletedStages += completedCount;
+          totalPossibleStages += activity.stages.length;
+        });
+      });
+
+      const completionRate = totalPossibleStages > 0
+        ? Math.round((totalCompletedStages / totalPossibleStages) * 100)
+        : 0;
+
+      document.getElementById('totalClients').textContent = clients.length;
+      document.getElementById('totalActivities').textContent = activities.length;
+      document.getElementById('totalSubmissions').textContent = totalSubmissionEntries;
+      document.getElementById('overallCompletion').textContent = completionRate + '%';
+    }
+
+    function safeClientId(username) {
+      return username.replace(/[^a-zA-Z0-9_-]/g, '_');
+    }
+
+    function toggleClientAccordion(username) {
+      const el = document.getElementById('client_accordion_' + safeClientId(username));
+      if (el) {
+        el.classList.toggle('open');
+      }
+    }
+
+    function getProgressState(progress) {
+      if (progress <= 0) return 'not-started';
+      if (progress >= 100) return 'completed';
+      return 'in-progress';
+    }
+
+    function renderClientProgress() {
+      const container = document.getElementById('clientProgressList');
+      const clients = getClientUsers();
+      const activities = getActivities();
+      const submissions = getSubmissions();
+      const filterValue = document.getElementById('clientFilter').value;
+
+      const filteredClients = filterValue === 'all'
+        ? clients
+        : clients.filter(client => client.username === filterValue);
+
+      if (!filteredClients.length) {
+        container.innerHTML = '<div class="empty">No client accounts found.</div>';
+        return;
+      }
+
+      container.innerHTML = filteredClients.map((client, index) => {
+        let totalCompletedStages = 0;
+        let totalPossibleStages = 0;
+        const fullName = getFullName(client) || client.username;
+
+        const activitiesHtml = activities.length
+          ? activities.map(activity => {
+              const key = client.username + '__' + activity.id;
+              const clientSubs = submissions[key] || {};
+
+              const completedCount = activity.stages.filter(
+                stage => clientSubs[stage.id]?.completed || clientSubs[stage.id]
+              ).length;
+
+              const totalStages = activity.stages.length;
+              const progress = totalStages > 0
+                ? Math.round((completedCount / totalStages) * 100)
+                : 0;
+
+              totalCompletedStages += completedCount;
+              totalPossibleStages += totalStages;
+
+              return `
+                <div class="client-activity">
+                  <h4>${activity.title}</h4>
+                  <div class="meta">Deadline: ${activity.deadline || 'No deadline'}</div>
+
+                  <div class="progress-wrap">
+                    <div class="progress-text">
+                      <span>${completedCount}/${totalStages} stages completed</span>
+                      <span>${progress}%</span>
+                    </div>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:${progress}%"></div>
+                    </div>
+                  </div>
+
+                  ${activity.stages.map(stage => {
+                    const sub = clientSubs[stage.id];
+                    return `
+                      <div class="stage-submission">
+                        <strong>${stage.title}</strong>
+                        <div class="meta">Instruction: ${stage.instruction}</div>
+                        ${sub
+                          ? `
+                            <div class="meta">Status: Completed</div>
+                            <div class="meta">File: ${sub.fileName || 'No file selected'}</div>
+                            <div class="meta">Remarks: ${sub.note || 'No remarks'}</div>
+                            <div class="meta">Uploaded: ${sub.uploadedAt || '-'}</div>
+                          `
+                          : `
+                            <div class="meta">Status: Not submitted yet</div>
+                          `
+                        }
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              `;
+            }).join('')
+          : '<div class="empty">No activities created yet.</div>';
+
+        const overallProgress = totalPossibleStages > 0
+          ? Math.round((totalCompletedStages / totalPossibleStages) * 100)
+          : 0;
+
+        const progressState = getProgressState(overallProgress);
+
+        return `
+          <div class="client-accordion ${index === 0 ? 'open' : ''}" id="client_accordion_${safeClientId(client.username)}">
+            <button class="client-accordion-header" type="button" onclick="toggleClientAccordion('${client.username}')">
+              <div>
+                <div class="client-name">${fullName}</div>
+                <div class="student-badge">Student Number: ${client.studentNumber || client.username}</div>
+              </div>
+
+              <div class="client-summary-right">
+                <div class="client-progress-mini">
+                  <div class="client-progress-mini-bar">
+                    <div class="client-progress-mini-fill ${progressState}" style="width:${overallProgress}%"></div>
+                  </div>
+                </div>
+                <div class="client-percent ${progressState}">${overallProgress}%</div>
+                <div class="client-arrow">⌄</div>
+              </div>
+            </button>
+
+            <div class="client-accordion-content">
+              <div class="client-accordion-inner">
+                <div class="client-accordion-body">
+                  ${activitiesHtml}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function refreshAdminView() {
+      renderActivities();
+      populateClientFilter();
+      renderDashboardStats();
+      renderClientProgress();
+    }
+
+    function goHome() {
+      window.location.replace('index.html');
+    }
+
+    generateStages();
+    refreshAdminView();
+
+    window.addEventListener('storage', () => {
+      refreshAdminView();
+    });
+
+    setInterval(refreshAdminView, 1500);
+  </script>
+</body>
+</html>

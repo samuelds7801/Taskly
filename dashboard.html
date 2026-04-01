@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskly | Student Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(139,0,0,0.28), transparent 30%),
+        radial-gradient(circle at top right, rgba(255,255,255,0.05), transparent 18%),
+        linear-gradient(135deg, #140000, #050505 60%, #000000);
+      color: #ffffff;
+    }
+
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .top-nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #8b0000, #3b0000);
+      box-shadow: 0 10px 24px rgba(139,0,0,0.28);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: #cbd5e1;
+      font-size: 13px;
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+
+    .nav-profile-pic {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .menu-btn {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: 0.25s ease;
+    }
+
+    .menu-btn:hover {
+      background: rgba(139,0,0,0.4);
+      border-color: rgba(239,68,68,0.35);
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      right: 0;
+      top: 56px;
+      min-width: 190px;
+      background: #111111;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    .menu-dropdown.open {
+      display: block;
+    }
+
+    .menu-dropdown button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .menu-dropdown button:hover {
+      background: rgba(139,0,0,0.28);
+    }
+
+    .page-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 34px 22px 42px;
+    }
+
+    .hero-panel,
+    .section-panel,
+    .stat-card,
+    .activity-accordion,
+    .stage-card,
+    .settings-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+    }
+
+    .hero-panel {
+      border-radius: 28px;
+      padding: 34px;
+      margin-bottom: 24px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero-copy h2 {
+      margin: 0 0 12px;
+      font-size: 42px;
+      line-height: 1.05;
+    }
+
+    .hero-copy h2 span {
+      color: #ef4444;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: #e5e7eb;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .hero-mini-card {
+      border-radius: 22px;
+      padding: 22px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.08);
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .mini-label {
+      color: #fca5a5;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .mini-value {
+      font-size: 38px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .mini-text {
+      color: #cbd5e1;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .stat-top i {
+      font-size: 18px;
+      color: #f87171;
+      background: rgba(139,0,0,0.18);
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+    }
+
+    .label {
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .value {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .section-panel,
+    .settings-card {
+      border-radius: 26px;
+      padding: 26px;
+    }
+
+    .section-panel h2,
+    .settings-card h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .section-text {
+      color: #cbd5e1;
+      margin: 0 0 18px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="file"],
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.95);
+      color: #111827;
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .profile-image-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0 18px;
+    }
+
+    .profile-image {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .btn {
+      border: none;
+      background: #8b0000;
+      color: #fff;
+      padding: 11px 15px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.25s ease;
+      margin-right: 8px;
+    }
+
+    .btn:hover {
+      background: #a30000;
+    }
+
+    .btn.secondary {
+      background: #374151;
+    }
+
+    .btn.secondary:hover {
+      background: #4b5563;
+    }
+
+    .btn.small {
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+
+    .empty {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 22px;
+      color: #e2e8f0;
+    }
+
+    .activity-accordion {
+      border-radius: 22px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: white;
+      text-align: left;
+      padding: 22px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .accordion-left h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .accordion-left p {
+      margin: 0 0 10px;
+      color: #e5e7eb;
+      line-height: 1.6;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    .accordion-right {
+      min-width: 100px;
+      text-align: right;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-pill {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      font-size: 12px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .accordion-icon {
+      font-size: 24px;
+      color: #fca5a5;
+      transition: transform 0.35s ease;
+    }
+
+    .activity-accordion.open .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    .accordion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.4s ease;
+      border-top: 1px solid rgba(255,255,255,0);
+    }
+
+    .activity-accordion.open .accordion-content {
+      grid-template-rows: 1fr;
+      border-top-color: rgba(255,255,255,0.08);
+    }
+
+    .accordion-inner {
+      overflow: hidden;
+    }
+
+    .accordion-inner-content {
+      padding: 0 22px 22px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 16px 0 18px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7f1d1d, #dc2626);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .stage-card {
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    .stage-card.completed {
+      border-color: rgba(34,197,94,0.35);
+      background: rgba(34,197,94,0.08);
+    }
+
+    .stage-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .stage-card h4 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge.completed {
+      background: rgba(34,197,94,0.15);
+      color: #86efac;
+    }
+
+    .badge.pending {
+      background: rgba(250,204,21,0.12);
+      color: #fde68a;
+    }
+
+    .instruction {
+      color: #e5e7eb;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .field-label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .status {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .stage-dropdown {
+      margin-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 12px;
+    }
+
+    .stage-dropdown-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      padding: 0;
+      font: inherit;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .stage-dropdown-icon {
+      transition: transform 0.3s ease;
+      color: #fca5a5;
+      font-size: 18px;
+    }
+
+    .stage-dropdown.open .stage-dropdown-icon {
+      transform: rotate(180deg);
+    }
+
+    .stage-dropdown-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+    }
+
+    .stage-dropdown.open .stage-dropdown-content {
+      grid-template-rows: 1fr;
+    }
+
+    .stage-dropdown-inner {
+      overflow: hidden;
+    }
+
+    .stage-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .top-nav-inner,
+      .page-shell {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .accordion-header {
+        flex-direction: column;
+      }
+
+      .accordion-right {
+        text-align: left;
+        justify-content: flex-start;
+      }
+
+      .hero-copy h2 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <div class="top-nav-inner">
+      <div class="brand">
+        <div class="brand-badge">
+          <i class="fa-solid fa-list-check"></i>
+        </div>
+        <div>
+          <h1>Taskly</h1>
+          <p>Student Dashboard</p>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <img id="navProfilePic" class="nav-profile-pic" src="" alt="Profile Picture">
+        <button class="menu-btn" onclick="toggleMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="menu-dropdown" id="menuDropdown">
+          <button onclick="openSettings()">Settings</button>
+          <button onclick="goHome()">Back to Home</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div id="dashboardView">
+      <section class="hero-panel">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <h2>WELCOME BACK, <span id="clientFirstName">Student</span></h2>
+            <p id="studentInfoText">Manage your tasks and complete your activity stages here.</p>
+          </div>
+
+          <div class="hero-mini-card">
+            <div class="mini-label">Overall Progress</div>
+            <div class="mini-value" id="heroProgress">0%</div>
+            <div class="mini-text">This shows your completion across all published activity stages.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Total Activities</div>
+            <i class="fa-solid fa-clipboard-list"></i>
+          </div>
+          <div class="value" id="totalActivities">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Completed Tasks</div>
+            <i class="fa-solid fa-check-circle"></i>
+          </div>
+          <div class="value" id="completedStages">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="label">Overall Progress</div>
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div class="value" id="overallProgress">0%</div>
+        </div>
+      </section>
+
+      <section class="section-panel">
+        <h2>My Activities</h2>
+        <p class="section-text">Click an activity to view all tasks, upload your file, and save your remarks.</p>
+        <div id="activityContainer"></div>
+      </section>
+    </div>
+
+    <div id="settingsView" class="hidden">
+      <section class="settings-card">
+        <h2>Settings</h2>
+        <p class="section-text">Edit your details here. Once saved, it will return to the dashboard.</p>
+
+        <div class="profile-image-wrap">
+          <img id="profilePreview" class="profile-image" src="" alt="Profile Picture">
+        </div>
+
+        <div class="field">
+          <label for="profileImageInput">Profile Picture</label>
+          <input type="file" id="profileImageInput" accept="image/*" />
+        </div>
+
+        <div class="field">
+          <label for="editStudentNumber">Student Number</label>
+          <input type="text" id="editStudentNumber" />
+        </div>
+
+        <div class="field">
+          <label for="editFirstName">First Name</label>
+          <input type="text" id="editFirstName" />
+        </div>
+
+        <div class="field">
+          <label for="editMiddleName">Middle Name (Optional)</label>
+          <input type="text" id="editMiddleName" />
+        </div>
+
+        <div class="field">
+          <label for="editLastName">Last Name</label>
+          <input type="text" id="editLastName" />
+        </div>
+
+        <div class="field">
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" />
+        </div>
+
+        <button class="btn" onclick="saveProfile()">Save Profile</button>
+        <button class="btn secondary" onclick="closeSettings()">Cancel</button>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const USERS_KEY = 'local_auth_users';
+    const ACTIVITIES_KEY = 'site_activities';
+    const SUBMISSIONS_KEY = 'client_stage_submissions';
+    const DEMO_STUDENT_KEY = 'taskly_demo_student';
+
+    function ensureDemoUser() {
+      const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+      const nonAdminUsers = users.filter(user => (user.username || '').toLowerCase() !== 'admin');
+      if (nonAdminUsers.length) {
+        const stored = localStorage.getItem(DEMO_STUDENT_KEY);
+        const matched = stored && nonAdminUsers.find(user => user.username === stored);
+        const active = matched || nonAdminUsers[0];
+        localStorage.setItem(DEMO_STUDENT_KEY, active.username);
+        return active.username;
+      }
+
+      const demoUser = {
+        username: 'student-demo',
+        studentNumber: '2026-0001',
+        firstName: 'Student',
+        middleName: '',
+        lastName: 'Demo',
+        email: 'studentdemo@example.com',
+        profileImage: ''
+      };
+      users.push(demoUser);
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      localStorage.setItem(DEMO_STUDENT_KEY, demoUser.username);
+      return demoUser.username;
+    }
+
+    let session = { username: ensureDemoUser() };
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    }
+
+    function getCurrentUser() {
+      return getUsers().find(user => user.username === session.username);
+    }
+
+    function getActivities() {
+      return JSON.parse(localStorage.getItem(ACTIVITIES_KEY) || '[]');
+    }
+
+    function getSubmissions() {
+      return JSON.parse(localStorage.getItem(SUBMISSIONS_KEY) || '{}');
+    }
+
+    function saveSubmissions(data) {
+      localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(data));
+    }
+
+    function getUserActivityKey(activityId) {
+      return session.username + '__' + activityId;
+    }
+
+    function getDeadlineStatus(deadline) {
+      const today = new Date();
+      const due = new Date(deadline + 'T23:59:59');
+      const diffMs = due - today;
+      const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) return { text: 'Overdue', color: '#fca5a5' };
+      if (diffDays === 0) return { text: 'Due today', color: '#fde68a' };
+      return { text: diffDays + ' day(s) remaining', color: '#86efac' };
+    }
+
+    function getDefaultProfileSvg() {
+      return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140"><rect width="100%" height="100%" fill="%23333333"/><text x="50%" y="50%" fill="white" font-size="20" text-anchor="middle" dominant-baseline="middle">No Photo</text></svg>';
+    }
+
+    function toggleMenu() {
+      document.getElementById('menuDropdown').classList.toggle('open');
+    }
+
+    function openSettings() {
+      document.getElementById('menuDropdown').classList.remove('open');
+      loadProfile();
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('settingsView').classList.remove('hidden');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsView').classList.add('hidden');
+      document.getElementById('dashboardView').classList.remove('hidden');
+    }
+
+    function loadProfile() {
+      const user = getCurrentUser();
+      if (!user) return;
+
+      const profileImage = user.profileImage || getDefaultProfileSvg();
+
+      document.getElementById('clientFirstName').textContent = user.firstName || user.username;
+      document.getElementById('studentInfoText').textContent =
+        `Student Number: ${user.studentNumber || user.username} • Email: ${user.email || 'No email set'}`;
+
+      document.getElementById('editStudentNumber').value = user.studentNumber || '';
+      document.getElementById('editFirstName').value = user.firstName || '';
+      document.getElementById('editMiddleName').value = user.middleName || '';
+      document.getElementById('editLastName').value = user.lastName || '';
+      document.getElementById('editEmail').value = user.email || '';
+
+      document.getElementById('profilePreview').src = profileImage;
+      document.getElementById('navProfilePic').src = profileImage;
+    }
+
+    function saveProfile() {
+      const users = getUsers();
+      const currentIndex = users.findIndex(user => user.username === session.username);
+
+      if (currentIndex === -1) {
+        alert('User not found.');
+        return;
+      }
+
+      const newStudentNumber = document.getElementById('editStudentNumber').value.trim();
+      const firstName = document.getElementById('editFirstName').value.trim();
+      const middleName = document.getElementById('editMiddleName').value.trim();
+      const lastName = document.getElementById('editLastName').value.trim();
+      const email = document.getElementById('editEmail').value.trim();
+
+      if (!newStudentNumber || !firstName || !lastName || !email) {
+        alert('Please complete Student Number, First Name, Last Name, and Email.');
+        return;
+      }
+
+      const duplicateStudent = users.find((user, index) =>
+        index !== currentIndex && (user.username || '').toLowerCase() === newStudentNumber.toLowerCase()
+      );
+
+      const duplicateEmail = users.find((user, index) =>
+        index !== currentIndex && (user.email || '').toLowerCase() === email.toLowerCase()
+      );
+
+      if (duplicateStudent) {
+        alert('Student number already exists.');
+        return;
+      }
+
+      if (duplicateEmail) {
+        alert('Email already exists.');
+        return;
+      }
+
+      const oldUsername = users[currentIndex].username;
+      const profileImage = users[currentIndex].profileImage || '';
+
+      users[currentIndex] = {
+        ...users[currentIndex],
+        username: newStudentNumber,
+        studentNumber: newStudentNumber,
+        firstName,
+        middleName,
+        lastName,
+        email,
+        profileImage
+      };
+
+      saveUsers(users);
+
+      if (oldUsername !== newStudentNumber) {
+        const submissions = getSubmissions();
+        const updatedSubmissions = {};
+
+        Object.keys(submissions).forEach(key => {
+          if (key.startsWith(oldUsername + '__')) {
+            const newKey = key.replace(oldUsername + '__', newStudentNumber + '__');
+            updatedSubmissions[newKey] = submissions[key];
+          } else {
+            updatedSubmissions[key] = submissions[key];
+          }
+        });
+
+        localStorage.setItem(SUBMISSIONS_KEY, JSON.stringify(updatedSubmissions));
+        localStorage.setItem(DEMO_STUDENT_KEY, newStudentNumber);
+        session = { username: newStudentNumber };
+      }
+
+      loadProfile();
+      renderActivities();
+      closeSettings();
+      alert('Profile updated successfully.');
+    }
+
+    document.getElementById('profileImageInput').addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const users = getUsers();
+        const currentIndex = users.findIndex(user => user.username === session.username);
+        if (currentIndex === -1) return;
+
+        users[currentIndex].profileImage = e.target.result;
+        saveUsers(users);
+        loadProfile();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function toggleAccordion(activityId) {
+      const card = document.getElementById(`accordion_${activityId}`);
+      card.classList.toggle('open');
+    }
+
+    function toggleStageDropdown(activityId, stageId) {
+      const dropdown = document.getElementById(`stage_dropdown_${activityId}_${stageId}`);
+      dropdown.classList.toggle('open');
+    }
+
+    function closeStageDropdown(activityId, stageId) {
+      const dropdown = document.getElementById(`stage_dropdown_${activityId}_${stageId}`);
+      if (dropdown) dropdown.classList.remove('open');
+    }
+
+    function saveStage(activityId, stageId) {
+      const fileInput = document.getElementById(`file_${activityId}_${stageId}`);
+      const noteInput = document.getElementById(`note_${activityId}_${stageId}`);
+
+      const file = fileInput.files[0];
+      const note = noteInput.value.trim();
+
+      const allSubmissions = getSubmissions();
+      const key = getUserActivityKey(activityId);
+
+      if (!allSubmissions[key]) {
+        allSubmissions[key] = {};
+      }
+
+      allSubmissions[key][stageId] = {
+        fileName: file ? file.name : (allSubmissions[key][stageId]?.fileName || ''),
+        note: note,
+        uploadedAt: new Date().toLocaleString(),
+        completed: true
+      };
+
+      saveSubmissions(allSubmissions);
+      closeStageDropdown(activityId, stageId);
+      renderActivities();
+
+      const activityCard = document.getElementById(`accordion_${activityId}`);
+      if (activityCard) activityCard.classList.add('open');
+    }
+
+    function renderSummaryStats(activities, allSubmissions) {
+      let totalStages = 0;
+      let completedStages = 0;
+
+      activities.forEach(activity => {
+        const key = getUserActivityKey(activity.id);
+        const userUploads = allSubmissions[key] || {};
+        totalStages += activity.stages.length;
+        completedStages += activity.stages.filter(stage => userUploads[stage.id]?.completed).length;
+      });
+
+      const progress = totalStages > 0 ? Math.round((completedStages / totalStages) * 100) : 0;
+
+      document.getElementById('totalActivities').textContent = activities.length;
+      document.getElementById('completedStages').textContent = completedStages;
+      document.getElementById('overallProgress').textContent = progress + '%';
+      document.getElementById('heroProgress').textContent = progress + '%';
+    }
+
+    function renderActivities() {
+      const container = document.getElementById('activityContainer');
+      const activities = getActivities();
+      const allSubmissions = getSubmissions();
+
+      renderSummaryStats(activities, allSubmissions);
+
+      if (!activities.length) {
+        container.innerHTML = '<div class="empty">No activities available yet.</div>';
+        return;
+      }
+
+      container.innerHTML = activities.map((activity, index) => {
+        const key = getUserActivityKey(activity.id);
+        const userUploads = allSubmissions[key] || {};
+        const completed = activity.stages.filter(stage => userUploads[stage.id]?.completed).length;
+        const progress = Math.round((completed / activity.stages.length) * 100);
+        const deadlineStatus = getDeadlineStatus(activity.deadline);
+
+        return `
+          <div class="activity-accordion ${index === 0 ? 'open' : ''}" id="accordion_${activity.id}">
+            <button class="accordion-header" type="button" onclick="toggleAccordion('${activity.id}')">
+              <div class="accordion-left">
+                <h2>${activity.title}</h2>
+                <p>${activity.description}</p>
+                <div class="meta">Progress: ${completed}/${activity.stages.length} completed</div>
+                <div class="meta">Deadline: ${activity.deadline || 'No deadline'}</div>
+                <div class="meta" style="color:${deadlineStatus.color}; font-weight:700;">
+                  ${activity.deadline ? deadlineStatus.text : ''}
+                </div>
+              </div>
+              <div class="accordion-right">
+                <span class="progress-pill">${progress}%</span>
+                <span class="accordion-icon">⌄</span>
+              </div>
+            </button>
+
+            <div class="accordion-content">
+              <div class="accordion-inner">
+                <div class="accordion-inner-content">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width:${progress}%"></div>
+                  </div>
+
+                  ${activity.stages.map(stage => {
+                    const submission = userUploads[stage.id];
+                    const isCompleted = !!submission?.completed;
+
+                    return `
+                      <div class="stage-card ${isCompleted ? 'completed' : ''}">
+                        <div class="stage-top">
+                          <h4>${stage.title}</h4>
+                          <span class="badge ${isCompleted ? 'completed' : 'pending'}">
+                            ${isCompleted ? 'Completed' : 'Pending'}
+                          </span>
+                        </div>
+
+                        <div class="instruction">${stage.instruction}</div>
+
+                        <div class="stage-dropdown ${isCompleted ? '' : 'open'}" id="stage_dropdown_${activity.id}_${stage.id}">
+                          <button
+                            class="stage-dropdown-toggle"
+                            type="button"
+                            onclick="toggleStageDropdown('${activity.id}', '${stage.id}')"
+                          >
+                            <span>${isCompleted ? 'View submitted stage' : 'Open stage form'}</span>
+                            <span class="stage-dropdown-icon">⌄</span>
+                          </button>
+
+                          <div class="stage-dropdown-content">
+                            <div class="stage-dropdown-inner">
+                              <label class="field-label">Upload File</label>
+                              <input type="file" id="file_${activity.id}_${stage.id}" />
+
+                              <label class="field-label">Remarks / Description</label>
+                              <textarea id="note_${activity.id}_${stage.id}" placeholder="Write your remarks here...">${submission ? submission.note : ''}</textarea>
+
+                              <div class="stage-actions">
+                                <button class="btn small" onclick="saveStage('${activity.id}', '${stage.id}')">
+                                  ${isCompleted ? 'Update Stage' : 'Save Stage'}
+                                </button>
+                              </div>
+
+                              <div class="status">
+                                ${submission
+                                  ? `Completed • File: ${submission.fileName || 'No file selected'} • Saved: ${submission.uploadedAt}`
+                                  : 'Not submitted yet'}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function goHome() {
+      window.location.replace('index.html');
+    }
+
+    document.addEventListener('click', function (e) {
+      const topRight = document.querySelector('.top-right');
+      if (!topRight.contains(e.target)) {
+        document.getElementById('menuDropdown').classList.remove('open');
+      }
+    });
+
+    loadProfile();
+    renderActivities();
+  </script>
+</body>
+</html>

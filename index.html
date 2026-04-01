@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taskly | Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #140000, #000000);
+      color: white;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo h1 {
+      margin: 0;
+      font-size: 28px;
+      color: #fff;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 22px;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    nav ul li a {
+      color: #f1f5f9;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    nav ul li a:hover {
+      color: #f87171;
+    }
+
+    .nav-login-btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: #8b0000;
+      color: white;
+      font-weight: 700;
+    }
+
+    section {
+      padding: 70px 20px;
+    }
+
+    .content1,
+    .content2,
+    .auth-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .content1 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-headline h1,
+    .about-headline h1,
+    .feature-headline h1,
+    .auth-title h1 {
+      margin: 0 0 12px;
+      font-size: 52px;
+      line-height: 1.05;
+    }
+
+    .hero-headline span {
+      color: #ef4444;
+    }
+
+    .hero-info p,
+    .about-info p {
+      color: #e5e7eb;
+      font-size: 17px;
+      line-height: 1.8;
+      margin-bottom: 22px;
+    }
+
+    .hero-action {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-solid,
+    .btn-outline,
+    .btn-auth {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: 0.25s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-solid,
+    .btn-auth {
+      background: #8b0000;
+      color: #fff;
+    }
+
+    .btn-solid:hover,
+    .btn-auth:hover {
+      background: #a30000;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .hero-img,
+    .about-img {
+      min-height: 320px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(139,0,0,0.35), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 90px;
+      color: rgba(255,255,255,0.18);
+    }
+
+    .about-info span {
+      color: #ef4444;
+      font-weight: 700;
+    }
+
+    .section2 {
+      background: rgba(255,255,255,0.03);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .feature-headline {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .feature-wrapper {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 22px;
+      transition: 0.25s ease;
+    }
+
+    .feature-wrapper:hover {
+      transform: translateY(-4px);
+      border-color: rgba(239,68,68,0.4);
+    }
+
+    .feature-sub-headline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .feature-sub-headline h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .feature-sub-headline i {
+      font-size: 28px;
+      color: #f87171;
+    }
+
+    .feature-description p {
+      margin: 0;
+      color: #e5e7eb;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    #login-section {
+      background: linear-gradient(135deg, #1b0000, #060606);
+    }
+
+    .auth-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .auth-left .auth-title h1 {
+      font-size: 46px;
+    }
+
+    .auth-left p {
+      color: #e5e7eb;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .card {
+      width: 100%;
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #3b0000, #120000, #000000, #4a0000);
+      background-size: 300% 300%;
+      animation: cardGradientMove 6s ease infinite;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .card .subtitle {
+      margin: 0 0 24px;
+      text-align: center;
+      color: #e2e8f0;
+      font-size: 14px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tabs button {
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.12);
+      color: #f1f5f9;
+      transition: 0.2s ease;
+    }
+
+    .tabs button.active {
+      background: #ffffff;
+      color: #1a0000;
+    }
+
+    .form-section {
+      display: none;
+    }
+
+    .form-section.active {
+      display: block;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.92);
+      color: #111827;
+    }
+
+    input:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    }
+
+    .message {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+      display: block;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      display: block;
+    }
+
+    footer {
+      background: #080808;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 50px 20px 24px;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .footer-section h3,
+    .footer-logo h1 {
+      margin-top: 0;
+      color: #fff;
+    }
+
+    .footer-section p,
+    .footer-section li,
+    .footer-section a {
+      color: #cbd5e1;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 12px;
+      font-size: 20px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 28px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    @keyframes cardGradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 900px) {
+      .content1,
+      .auth-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-headline h1,
+      .about-headline h1,
+      .feature-headline h1,
+      .auth-left .auth-title h1 {
+        font-size: 38px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .tabs {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-headline h1,
+      .about-headline h1,
+      .feature-headline h1,
+      .auth-left .auth-title h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <h1>Taskly</h1>
+      </div>
+
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#login-section" class="nav-login-btn">Open Dashboard</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home">
+      <div class="content1">
+        <div class="left">
+          <div class="hero-landing-page">
+            <div class="hero-landing-info">
+              <div class="hero-headline">
+                <h1>TRACK YOUR <span>ASSIGNMENT</span></h1>
+                <h1>NOW</h1>
+              </div>
+              <div class="hero-info">
+                <p>Manage activities, monitor progress, and organize schoolwork with Taskly in one clean dashboard.</p>
+              </div>
+            </div>
+            <div class="hero-action">
+              <a href="#login-section" class="btn-solid">Open Dashboard</a>
+              <a href="#features" class="btn-outline">View Features</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="hero-img">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="content1">
+        <div class="left">
+          <div class="about-img">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+        </div>
+        <div class="right">
+          <div class="about-landing-page">
+            <div class="about-headline">
+              <h1>About Us</h1>
+            </div>
+            <div class="about-info">
+              <p>
+                <span>Taskly</span> is a web-based activity and progress tracker designed to help users organize and manage tasks efficiently.
+                The system allows admins to create activities with stages and deadlines, while users can submit their work and track completion progress.
+                <br><br>
+                With its clean interface and organized dashboard system, <span>Taskly</span> provides a convenient solution for monitoring tasks, submissions, and overall progress.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section2">
+      <div class="content2">
+        <div class="top">
+          <div class="feature-headline">
+            <h1>Features</h1>
+          </div>
+        </div>
+
+        <div class="bottom">
+          <div class="feature-list">
+            <div class="feature-wrapper">
+              <div class="feature-info">
+                <div class="feature-sub-headline">
+                  <h1>Activity Management</h1>
+                  <i class="fa-solid fa-clipboard"></i>
+                </div>
+                <div class="feature-description">
+                  <p>Create activities with multiple stages, instructions, and deadlines.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-wrapper">
+              <div class="feature-info">
+                <div class="feature-sub-headline">
+                  <h1>Deadline Tracking</h1>
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="feature-description">
+                  <p>Stay updated with clear due dates and automatic overdue monitoring.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-wrapper">
+              <div class="feature-info">
+                <div class="feature-sub-headline">
+                  <h1>Admin Monitoring</h1>
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div class="feature-description">
+                  <p>Monitor all client accounts, submissions, and overall completion rates.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-wrapper">
+              <div class="feature-info">
+                <div class="feature-sub-headline">
+                  <h1>Stage Submission</h1>
+                  <i class="fa-solid fa-upload"></i>
+                </div>
+                <div class="feature-description">
+                  <p>Users can open each stage, upload work, and mark progress as completed.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-wrapper">
+              <div class="feature-info">
+                <div class="feature-sub-headline">
+                  <h1>Progress Overview</h1>
+                  <i class="fa-solid fa-eye"></i>
+                </div>
+                <div class="feature-description">
+                  <p>See progress percentages and stage completion in one organized view.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="feature-wrapper">
+              <div class="feature-info">
+                <div class="feature-sub-headline">
+                  <h1>Local Saving</h1>
+                  <i class="fa-solid fa-folder"></i>
+                </div>
+                <div class="feature-description">
+                  <p>Data is stored in the current browser using local storage for quick testing.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="login-section">
+      <div class="auth-wrapper">
+        <div class="auth-left">
+          <div class="auth-title">
+            <h1>Open Your Dashboard</h1>
+          </div>
+          <p>
+            Authentication has been removed from this version. Just choose the page you want to open and you will be redirected directly.
+          </p>
+          <p>
+            The student page opens the dashboard immediately, while the admin page opens the activity management panel.
+          </p>
+        </div>
+
+        <div class="card">
+          <div id="authBox">
+            <h2>Quick Access</h2>
+            <p class="subtitle">No login required</p>
+
+            <div style="display:grid; gap:14px;">
+              <button class="btn-auth" type="button" onclick="window.location.href='dashboard.html'">Open Student Dashboard</button>
+              <button class="btn-auth" type="button" onclick="window.location.href='admin-dashboard.html'">Open Admin Dashboard</button>
+            </div>
+
+            <div id="message" class="message"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-section footer-brand">
+        <div class="footer-logo">
+          <h1>Taskly</h1>
+        </div>
+        <p>Your activity and progress tracker. Organize, monitor, and manage tasks efficiently.</p>
+      </div>
+
+      <div class="footer-section footer-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#login-section">Open Dashboard</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section footer-contact">
+        <h3>Contact</h3>
+        <ul>
+          <li><i class="fa-solid fa-envelope"></i> support@taskly.com</li>
+          <li><i class="fa-solid fa-phone"></i> +63 000 000 0000</li>
+          <li><i class="fa-solid fa-location-dot"></i> Philippines</li>
+        </ul>
+      </div>
+
+      <div class="footer-section footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Taskly. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const messageBox = document.getElementById('message');
+    function showMessage(text, type) {
+      if (!messageBox) return;
+      messageBox.textContent = text;
+      messageBox.className = 'message ' + type;
+    }
+
+    // Optional starter message for this no-auth version.
+    showMessage('Direct access enabled. Choose a dashboard above.', 'success');
+  </script>
+</body>
+</html>
